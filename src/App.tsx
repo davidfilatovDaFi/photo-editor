@@ -14,6 +14,24 @@ function App() {
     setFilter(filters.join(' '))
   }
 
+  const savePhoto = () => {
+    if (image) {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = 600
+      canvas.height = 400
+      if (ctx) ctx.filter = filter
+      const canvasImage = new Image()
+      canvasImage.src = image
+      ctx?.drawImage(canvasImage, 0, 0, canvas.width, canvas.height)
+    
+      const link = document.createElement('a')
+      link.download = "image.jpg"
+      link.href = canvas.toDataURL()
+      link.click()
+    }
+  }
+
   return (
     <div className='h-screen flex flex-col justify-center items-center bg-sky-100'>
       <div className='shadow-2xl p-10 bg-white rounded-lg'>
@@ -33,7 +51,7 @@ function App() {
                 
               }} className="hidden" id="img" type="file" />
             </Button>
-            <Button type={ButtonTypes.SECONDARY}>Save</Button>
+            <Button onClick={savePhoto} type={ButtonTypes.SECONDARY}>Save</Button>
           </div>
         </div>
       </div>
