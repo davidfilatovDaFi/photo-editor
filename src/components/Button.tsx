@@ -10,13 +10,15 @@ export enum ButtonTypes {
 interface IButton {
   children: ReactNode,
   type: ButtonTypes,
-  onClick?: () => void
+  onClick?: () => void,
+  disabled?: boolean
 }
 
-const Button = ({children, type, onClick}: IButton) => {
+const Button = ({children, type, onClick, disabled}: IButton) => {
 
   return (
     <button 
+      disabled={disabled}
       onClick={onClick}
       className={clsx(
         'p-3 rounded min-w-[120px]', 
