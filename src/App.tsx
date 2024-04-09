@@ -1,7 +1,7 @@
 import Filters, { IOption } from "./components/Filters"
 import example from './assets/example.png'
 import Button, { ButtonTypes } from "./components/Button"
-import { ChangeEventHandler, MouseEventHandler, useState } from "react"
+import { ChangeEventHandler, useState } from "react"
 
 function App() {
 
