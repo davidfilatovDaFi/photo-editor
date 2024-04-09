@@ -1,11 +1,12 @@
 import Filters, { IOption } from "./components/Filters"
 import example from './assets/example.png'
 import Button, { ButtonTypes } from "./components/Button"
-import { useState } from "react"
+import { ChangeEventHandler, MouseEventHandler, useState } from "react"
 
 function App() {
 
   const [image, setImage] = useState('')
+  const [imageSize, setImageSize] = useState({width: 0, height: 0})
   const [filter, setFilter] = useState('')
   const [isReset, setIsReset] = useState(false)
 
@@ -14,12 +15,24 @@ function App() {
     setFilter(filters.join(' '))
   }
 
+  const chooseImage: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file= e.target.files ? e.target.files[0] : null
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    setImage(url)
+    const naturalImage = new Image()
+    naturalImage.src = url
+    naturalImage.onload = () => {
+      setImageSize({width: naturalImage.naturalWidth, height: naturalImage.naturalHeight})
+    }
+  }
+
   const savePhoto = () => {
     if (image) {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
-      canvas.width = 600
-      canvas.height = 400
+      canvas.width = imageSize.width
+      canvas.height = imageSize.height
       if (ctx) ctx.filter = filter
       const canvasImage = new Image()
       canvasImage.src = image
@@ -45,11 +58,7 @@ function App() {
           <div className="grid grid-cols-2 mobile:flex space-x-2">
             <Button type={ButtonTypes.TERTIATY}>
               <label className="cursor-pointer -m-3 p-3 block" htmlFor="img">Choose</label>
-              <input onChange={e => {
-                const file= e.target.files ? e.target.files[0] : null
-                if (file) setImage(URL.createObjectURL(file))
-                
-              }} className="hidden" id="img" type="file" />
+              <input onChange={chooseImage} className="hidden" id="img" type="file" />
             </Button>
             <Button onClick={savePhoto} type={ButtonTypes.SECONDARY}>Save</Button>
           </div>
